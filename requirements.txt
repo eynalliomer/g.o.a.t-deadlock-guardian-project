@@ -1,0 +1,3 @@
+# Proje bağımlılıkları (haftalar ilerledikçe eklenecek)
+pytest
+reportlab  # yalnızca 04-Kaynaklar'daki PDF betikleri için

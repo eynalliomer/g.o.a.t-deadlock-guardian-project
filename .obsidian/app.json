@@ -1,0 +1,13 @@
+{
+  "userIgnoreFilters": [
+    "src/",
+    "build/",
+    "node_modules/",
+    ".git/"
+  ],
+  "newFileLocation": "folder",
+  "newFileFolderPath": "01-Notlar",
+  "attachmentFolderPath": "04-Kaynaklar",
+  "showLineNumber": true,
+  "alwaysUpdateLinks": true
+}

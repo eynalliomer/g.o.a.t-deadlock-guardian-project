@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+
+# Obsidian'ın kişisel pencere/oturum dosyaları (her açılışta değişir)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/graph.json
+.trash/
+
+# İşletim sistemi / editör çöpleri
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/settings.json

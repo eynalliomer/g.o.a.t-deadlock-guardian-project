@@ -1,0 +1,4 @@
+# Satır sonlarını tüm sistemlerde LF olarak sabitle
+* text=auto eol=lf
+*.pdf binary
+*.png binary
