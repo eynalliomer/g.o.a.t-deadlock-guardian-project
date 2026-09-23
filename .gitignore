@@ -5,6 +5,9 @@ __pycache__/
 venv/
 .pytest_cache/
 
+# Simülasyon çalıştırıldığında üretilen görsel önizleme (kod değil, çıktı)
+simulation_view.html
+
 # Obsidian'ın kişisel pencere/oturum dosyaları (her açılışta değişir)
 .obsidian/workspace.json
 .obsidian/workspace-mobile.json
