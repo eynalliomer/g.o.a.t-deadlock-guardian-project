@@ -1,0 +1,11 @@
+{
+    "description": "Çok örnekli kaynak: R1'in 3 birimi var, P1 2 birim alır, P2 2 birim ister (yetersiz, WAITING), P1 1 birim bırakınca P2'ye yeter.",
+    "resources": [
+        {"name": "R1", "total_instances": 3}
+    ],
+    "events": [
+        {"action": "acquire", "process": "P1", "resource": "R1", "amount": 2},
+        {"action": "acquire", "process": "P2", "resource": "R1", "amount": 2},
+        {"action": "release", "process": "P1", "resource": "R1", "amount": 1}
+    ]
+}

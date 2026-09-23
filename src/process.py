@@ -10,7 +10,7 @@ class Process:
     def __init__(self, name: str):
         self.name = name
         self.state = ProcessState.READY
-        self.held_resources = []
+        self.held_resources = {}  # {kaynak_adı: tutulan_adet}
 
     def __repr__(self):
         return f"Process({self.name}, state={self.state.name}, held={self.held_resources})"

@@ -1,0 +1,11 @@
+{
+    "description": "Hafta 2'deki temel akış: P1 R1'i alır, P2 bekler, P1 bırakınca R1 P2'ye geçer.",
+    "resources": [
+        {"name": "R1", "total_instances": 1}
+    ],
+    "events": [
+        {"action": "acquire", "process": "P1", "resource": "R1", "amount": 1},
+        {"action": "acquire", "process": "P2", "resource": "R1", "amount": 1},
+        {"action": "release", "process": "P1", "resource": "R1", "amount": 1}
+    ]
+}

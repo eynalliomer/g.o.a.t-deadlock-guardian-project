@@ -3,7 +3,10 @@ from src.process import ProcessState
 
 def _process_card(process):
     color = "#2ecc71" if process.state == ProcessState.READY else "#e74c3c"
-    held = ", ".join(process.held_resources) if process.held_resources else "—"
+    if process.held_resources:
+        held = ", ".join(f"{name}×{amount}" for name, amount in process.held_resources.items())
+    else:
+        held = "—"
     return f"""
     <div class="card" style="border-color:{color}">
         <h3>{process.name}</h3>
@@ -14,12 +17,16 @@ def _process_card(process):
 
 
 def _resource_card(resource):
-    owner = resource.owner.name if resource.owner else "—"
-    waiting = ", ".join(p.name for p in resource.waiting_queue) or "—"
+    allocation = ", ".join(
+        f"{p.name}×{amount}" for p, amount in resource.allocation.items()
+    ) or "—"
+    waiting = ", ".join(
+        f"{p.name}(ister {amount})" for p, amount in resource.waiting_queue
+    ) or "—"
     return f"""
     <div class="card" style="border-color:#3498db">
-        <h3>{resource.name}</h3>
-        <p><b>Sahibi:</b> {owner}</p>
+        <h3>{resource.name} ({resource.available_instances}/{resource.total_instances} boşta)</h3>
+        <p><b>Dağıtım:</b> {allocation}</p>
         <p><b>Bekleyen kuyruk:</b> {waiting}</p>
     </div>
     """

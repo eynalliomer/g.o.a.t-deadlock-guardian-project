@@ -5,7 +5,7 @@ from src.resource import Resource
 def test_yeni_process_ready_ve_bos_kaynak_listesiyle_baslar():
     p = Process("P1")
     assert p.state == ProcessState.READY
-    assert p.held_resources == []
+    assert p.held_resources == {}
 
 
 def test_bos_kaynak_dogrudan_verilir():
@@ -15,9 +15,9 @@ def test_bos_kaynak_dogrudan_verilir():
     sonuc = r.acquire(p)
 
     assert sonuc is True
-    assert r.owner is p
+    assert r.allocation[p] == 1
     assert p.state == ProcessState.READY
-    assert "R1" in p.held_resources
+    assert p.held_resources["R1"] == 1
 
 
 def test_mesgul_kaynak_isteyen_process_waiting_olur():
@@ -30,7 +30,7 @@ def test_mesgul_kaynak_isteyen_process_waiting_olur():
 
     assert sonuc is False
     assert p2.state == ProcessState.WAITING
-    assert p2 in r.waiting_queue
+    assert any(p is p2 for p, _ in r.waiting_queue)
 
 
 def test_release_kaynagi_bekleyen_processe_devreder():
@@ -43,10 +43,11 @@ def test_release_kaynagi_bekleyen_processe_devreder():
 
     r.release(p1)
 
-    assert r.owner is p2
+    assert p2 in r.allocation
+    assert r.allocation[p2] == 1
     assert p2.state == ProcessState.READY
-    assert "R1" in p2.held_resources
-    assert "R1" not in p1.held_resources
+    assert p2.held_resources["R1"] == 1
+    assert p1 not in r.allocation
     assert r.waiting_queue == []
 
 
