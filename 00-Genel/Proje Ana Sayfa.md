@@ -10,6 +10,9 @@ durum: hafta-2
 **Ders:** İşletim Sistemleri (Yazılım Mühendisliği) · **Süre:** 11 hafta · **Referans:** Silberschatz, *Operating System Concepts* 10. baskı
 **Kaynak belge:** ![[04-Kaynaklar/Deadlock_Guardian_Proje_Dosyasi.pdf]]
 
+## GitHub
+https://github.com/eynalliomer/g.o.a.t-deadlock-guardian-project · her hafta `hafta-XX` etiketiyle işaretlenir
+
 ## Proje Belgeleri
 - 📘 **El kitabı (11 haftanın bilgi havuzu):** ![[04-Kaynaklar/Deadlock_Guardian_El_Kitabi.pdf]]
 - 📄 Hocaya teslim edilen plan: [[04-Kaynaklar/Deadlock_Guardian_11_Haftalik_Plan.pdf]]
@@ -20,6 +23,7 @@ durum: hafta-2
 - [[00-Genel/Karar Geçmişi]]: fikir havuzundan Deadlock Guardian'a nasıl gelindi
 
 ## Haftalar
+- [[01-Notlar/Haftalar/Hafta 01 - Konuyu Anlama ve Tasarım]] ✅
 - [[01-Notlar/Haftalar/Hafta 02 - Basit Simülasyon]] ← **şu anki hafta**
 
 ## Açık Kararlar
@@ -27,8 +31,8 @@ durum: hafta-2
 - [ ] Veri: JSON mu, SQLite mı?
 - [x] Ekip 4 kişi (roller: [[00-Genel/Ekip ve Teknoloji]])
 - [ ] Rollerin hangi üyeye verileceği
-- [ ] GitHub reposu ve branch düzeni (öneri: El kitabı Ek A)
-- [ ] Geliştirme ortamı: Windows / macOS (tartışılıyor)
+- [x] GitHub deposu kuruldu (tek geliştirici, `main` dalı)
+- [x] Geliştirme ortamı: macOS + VS Code
 
 ## İlerleme
 - [[03-Gunluk/2026-09-23]]
