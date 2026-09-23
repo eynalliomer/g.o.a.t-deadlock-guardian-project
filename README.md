@@ -19,9 +19,9 @@ Deadlock, birden fazla process'in birbirinin tuttuğu kaynağı beklemesi yüzü
 | Hafta | Aşama | Durum |
 |---|---|---|
 | 1 | Konuyu anlama ve proje tasarımı | ✅ Tamamlandı |
-| 2 | Basit simülasyon | ⏳ Sırada |
-| 3 | Kaynak ilişkileri | |
-| 4 | Deadlock tespiti | |
+| 2 | Basit simülasyon | ✅ Tamamlandı |
+| 3 | Kaynak ilişkileri | ✅ Tamamlandı |
+| 4 | Deadlock tespiti | ⏳ Sırada |
 | 5 | Görselleştirme | |
 | 6 | Risk analizi (Banker's Algorithm) | |
 | 7 | Risk seviyesi sistemi | |
@@ -55,10 +55,22 @@ Notlar [Obsidian](https://obsidian.md) ile yazılır; klasör aynı zamanda bir 
 
 ## Çalıştırma
 
-Kod 2. haftadan itibaren eklenecek. Kurulum:
+Kurulum:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
+```
+
+Bir senaryoyu çalıştırmak (olay kaydı, durum tablosu ve `simulation_view.html` önizlemesi üretir):
+
+```bash
+python -m src.run_scenario scenarios/hafta3_cok_ornekli.json
+```
+
+Testler:
+
+```bash
+python -m pytest tests/ -v
 ```
