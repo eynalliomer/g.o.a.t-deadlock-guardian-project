@@ -1,4 +1,5 @@
 from src.process import ProcessState
+from src.graph_view import render_rag_svg
 
 
 def _process_card(process, deadlocked=False):
@@ -54,7 +55,10 @@ def render_step(title: str, processes, resources, report=None) -> str:
     <section class="step">
         <h2>{title}</h2>
         {_report_banner(report)}
-        <div class="row">{process_cards}{resource_cards}</div>
+        <div class="step-body">
+            <div class="row cards">{process_cards}{resource_cards}</div>
+            <div class="graph">{render_rag_svg(processes, resources, report)}</div>
+        </div>
     </section>
     """
 
@@ -73,6 +77,9 @@ def save_html(steps_html: list[str], out_path: str = "simulation_view.html"):
         .banner.warning { background:#fef5e7; color:#b9770e; }
         .banner.danger { background:#fdedec; color:#c0392b; }
         .card.deadlocked { background:#fdedec; box-shadow:0 0 0 3px #c0392b; }
+        .step-body { display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap; }
+        .cards { flex:1; min-width:300px; }
+        .graph { background:white; border-radius:8px; padding:8px; border:1px solid #ddd; }
         .badge { background:#c0392b; color:white; font-size:11px; padding:2px 6px;
                  border-radius:4px; vertical-align:middle; }
     </style>
