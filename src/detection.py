@@ -65,23 +65,37 @@ def detect_deadlock(resources) -> list:
             allocation.setdefault(process.name, {})
 
     # Elinde hiçbir şey olmayan process kimseyi kilitleyemez → baştan bitmiş sayılır.
-    finish = {name: not held for name, held in allocation.items()}
+    finished = {name: not held for name, held in allocation.items()}
+    _, stuck = run_to_completion(work, request, allocation, finished)
+    return sorted(stuck)
 
+
+def run_to_completion(work, demand, allocation, finished):
+    """Work/Finish döngüsü: tespit algoritması ve Banker's güvenlik kontrolünün ortak çekirdeği.
+
+    demand: her process'in bitmek için istediği ({process: {kaynak: adet}});
+      tespitte Request (şu an beklediği), Banker's'ta Need (en kötü durumda isteyebileceği).
+    finished: {process: baştan bitmiş sayılıyor mu}
+    Dönen: (bitiş sırası, bitemeyen processler)
+    """
+    work = dict(work)  # çağıranın sözlüğünü bozmamak için kopya
+    finished = dict(finished)
+    order = []
     progress = True
     while progress:
         progress = False
-        for name in finish:
-            if finish[name]:
+        for name in finished:
+            if finished[name]:
                 continue
-            if all(amount <= work[r] for r, amount in request[name].items()):
-                # P'nin isteği karşılanabiliyor → işini bitirip elindekileri bırakacağını varsay.
-                for r, amount in allocation[name].items():
-                    work[r] += amount
-                finish[name] = True
+            if all(amount <= work.get(r, 0) for r, amount in demand.get(name, {}).items()):
+                # İsteği karşılanabiliyor → işini bitirip elindekileri bırakacağını varsay.
+                for r, amount in allocation.get(name, {}).items():
+                    work[r] = work.get(r, 0) + amount
+                finished[name] = True
+                order.append(name)
                 progress = True
-
-    return sorted(name for name, done in finish.items() if not done)
-
+    stuck = [name for name, done in finished.items() if not done]
+    return order, stuck
 
 @dataclass
 class DeadlockReport:
