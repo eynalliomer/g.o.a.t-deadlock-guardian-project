@@ -22,8 +22,8 @@ Deadlock, birden fazla process'in birbirinin tuttuğu kaynağı beklemesi yüzü
 | 2 | Basit simülasyon | ✅ Tamamlandı |
 | 3 | Kaynak ilişkileri | ✅ Tamamlandı |
 | 4 | Deadlock tespiti | ✅ Tamamlandı |
-| 5 | Görselleştirme | ⏳ Sırada |
-| 6 | Risk analizi (Banker's Algorithm) | |
+| 5 | Görselleştirme | ✅ Tamamlandı |
+| 6 | Risk analizi (Banker's Algorithm) | ⏳ Sırada |
 | 7 | Risk seviyesi sistemi | |
 | 8 | Recovery | |
 | 9 | Kullanıcı arayüzü | |
@@ -69,7 +69,7 @@ Bir senaryoyu çalıştırmak (olay kaydı, durum tablosu ve `simulation_view.ht
 python -m src.run_scenario scenarios/hafta3_cok_ornekli.json
 ```
 
-Deadlock tespitini görmek için (her adımda deadlock durumu konsolda ve `simulation_view.html`'de gösterilir):
+Deadlock tespitini görmek için (her adımda deadlock durumu konsolda, Resource Allocation Graph ise `simulation_view.html`'de adım adım gösterilir):
 
 ```bash
 python -m src.run_scenario scenarios/hafta4_deadlock.json            # deadlock oluşur
