@@ -6,6 +6,7 @@ from src.resource import Resource
 from src.event_log import EventLog
 from src.state_table import print_state_table
 from src.html_view import render_step, save_html
+from src.detection import analyze
 
 
 def run_scenario_step_by_step(path: str):
@@ -18,7 +19,8 @@ def run_scenario_step_by_step(path: str):
         for r in data["resources"]
     }
     processes = {}
-    steps_html = [render_step("0. Başlangıç", [], list(resources.values()))]
+    report = analyze(list(resources.values()))
+    steps_html = [render_step("0. Başlangıç", [], list(resources.values()), report)]
 
     def get_process(name: str) -> Process:
         if name not in processes:
@@ -39,7 +41,8 @@ def run_scenario_step_by_step(path: str):
         else:
             raise ValueError(f"Bilinmeyen action: {event['action']}")
 
-        steps_html.append(render_step(title, list(processes.values()), list(resources.values())))
+        report = analyze(list(resources.values()))
+        steps_html.append(render_step(title, list(processes.values()), list(resources.values()), report))
 
     return {
         "description": data.get("description", ""),
@@ -47,6 +50,7 @@ def run_scenario_step_by_step(path: str):
         "resources": resources,
         "event_log": event_log,
         "steps_html": steps_html,
+        "report": report,
     }
 
 
@@ -64,6 +68,9 @@ def main():
     result["event_log"].print_all()
 
     print_state_table(result["processes"], result["resources"])
+
+    print("\n--- Deadlock Analizi ---")
+    print(result["report"].summary())
 
     out_path = save_html(result["steps_html"])
     print(f"\nGörsel önizleme kaydedildi: {out_path}")

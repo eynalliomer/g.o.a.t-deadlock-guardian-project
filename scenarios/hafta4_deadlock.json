@@ -1,0 +1,13 @@
+{
+    "description": "Klasik deadlock: P1 R1'i, P2 R2'yi tutuyor; sonra ikisi de diğerinin kaynağını istiyor ve birbirlerini sonsuza kadar bekliyorlar.",
+    "resources": [
+        {"name": "R1", "total_instances": 1},
+        {"name": "R2", "total_instances": 1}
+    ],
+    "events": [
+        {"action": "acquire", "process": "P1", "resource": "R1"},
+        {"action": "acquire", "process": "P2", "resource": "R2"},
+        {"action": "acquire", "process": "P1", "resource": "R2"},
+        {"action": "acquire", "process": "P2", "resource": "R1"}
+    ]
+}

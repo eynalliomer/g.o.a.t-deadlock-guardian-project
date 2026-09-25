@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 WHITE, GRAY, BLACK = 0, 1, 2  # ziyaret edilmedi / yolda (yığında) / bitti
 
 
@@ -79,3 +81,36 @@ def detect_deadlock(resources) -> list:
                 progress = True
 
     return sorted(name for name, done in finish.items() if not done)
+
+
+@dataclass
+class DeadlockReport:
+    deadlocked: list  # deadlock'taki process adları (tespit algoritmasına göre)
+    cycle: list | None  # RAG'de bulunan döngü (varsa)
+
+    @property
+    def has_deadlock(self) -> bool:
+        return bool(self.deadlocked)
+
+    def cycle_path(self) -> str:
+        if not self.cycle:
+            return ""
+        # Aynı döngü hep aynı yazılsın diye alfabetik en küçük düğümden başlat (ör. P1 → R2 → ...).
+        start = self.cycle.index(min(self.cycle))
+        ordered = self.cycle[start:] + self.cycle[:start]
+        return " → ".join(ordered + [ordered[0]])
+
+    def summary(self) -> str:
+        if self.has_deadlock:
+            return f"DEADLOCK! Takılı processler: {', '.join(self.deadlocked)} | Döngü: {self.cycle_path()}"
+        if self.cycle:
+            return f"Döngü var ({self.cycle_path()}) ama deadlock yok: çok örnekli kaynak sayesinde çözülebilir."
+        return "Deadlock yok."
+
+
+def analyze(resources) -> DeadlockReport:
+    """RAG döngü aramasını ve tespit algoritmasını birlikte çalıştırıp tek raporda toplar."""
+    return DeadlockReport(
+        deadlocked=detect_deadlock(resources),
+        cycle=find_cycle(build_rag(resources)),
+    )

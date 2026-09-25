@@ -1,0 +1,15 @@
+{
+    "description": "Döngü var ama deadlock yok: R1'in 2 birimi var ve biri kimseyi beklemeyen P3'te. P3 R1'i bırakınca zincir çözülüyor.",
+    "resources": [
+        {"name": "R1", "total_instances": 2},
+        {"name": "R2", "total_instances": 1}
+    ],
+    "events": [
+        {"action": "acquire", "process": "P1", "resource": "R1"},
+        {"action": "acquire", "process": "P3", "resource": "R1"},
+        {"action": "acquire", "process": "P2", "resource": "R2"},
+        {"action": "acquire", "process": "P1", "resource": "R2"},
+        {"action": "acquire", "process": "P2", "resource": "R1"},
+        {"action": "release", "process": "P3", "resource": "R1"}
+    ]
+}
