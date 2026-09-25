@@ -82,9 +82,63 @@ def save_html(steps_html: list[str], out_path: str = "simulation_view.html"):
         .graph { background:white; border-radius:8px; padding:8px; border:1px solid #ddd; }
         .badge { background:#c0392b; color:white; font-size:11px; padding:2px 6px;
                  border-radius:4px; vertical-align:middle; }
+        .nav { position:sticky; top:0; z-index:1; display:flex; gap:10px; align-items:center;
+               background:#f4f4f4; padding:10px 0; margin-bottom:10px; border-bottom:1px solid #ddd; }
+        .nav button { font-size:15px; padding:6px 14px; border-radius:6px; border:1px solid #999;
+                      background:white; cursor:pointer; }
+        .nav button:disabled { opacity:0.4; cursor:default; }
+        #counter { font-weight:bold; min-width:110px; text-align:center; }
+        .hint { color:#777; font-size:13px; margin-left:auto; }
     </style>
     """
-    html = f"<html><head><meta charset='utf-8'>{style}</head><body>{''.join(steps_html)}</body></html>"
+    nav = """
+    <div class="nav">
+        <button id="prev">◀ Önceki</button>
+        <span id="counter"></span>
+        <button id="next">Sonraki ▶</button>
+        <button id="toggle-all">Tümünü göster</button>
+        <span class="hint">Klavye: ← →</span>
+    </div>
+    """
+    # JS yalnızca adımları gizleyip gösteriyor; JS kapalıysa bütün adımlar alt alta görünür.
+    script = """
+    <script>
+        const steps = document.querySelectorAll(".step");
+        const prev = document.getElementById("prev");
+        const next = document.getElementById("next");
+        const toggle = document.getElementById("toggle-all");
+        const counter = document.getElementById("counter");
+        let current = 0;
+        let showAll = false;
+
+        function update() {
+            steps.forEach((step, i) => {
+                step.style.display = (showAll || i === current) ? "" : "none";
+            });
+            counter.textContent = showAll ? "Tüm adımlar" : `Adım ${current + 1} / ${steps.length}`;
+            prev.disabled = showAll || current === 0;
+            next.disabled = showAll || current === steps.length - 1;
+            toggle.textContent = showAll ? "Adım adım göster" : "Tümünü göster";
+        }
+
+        function go(delta) {
+            if (showAll) return;
+            current = Math.min(Math.max(current + delta, 0), steps.length - 1);
+            update();
+        }
+
+        prev.addEventListener("click", () => go(-1));
+        next.addEventListener("click", () => go(1));
+        toggle.addEventListener("click", () => { showAll = !showAll; update(); });
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowRight") go(1);
+            if (e.key === "ArrowLeft") go(-1);
+        });
+        update();
+    </script>
+    """
+    html = (f"<html><head><meta charset='utf-8'>{style}</head>"
+            f"<body>{nav}{''.join(steps_html)}{script}</body></html>")
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(html)
     return out_path
