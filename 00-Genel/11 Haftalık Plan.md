@@ -13,7 +13,7 @@ tags: [deadlock-guardian, plan]
 | 3 | [[01-Notlar/Haftalar/Hafta 03 - Kaynak İlişkileri\|Kaynak İlişkileri]] | Allocation/request tabloları, çok örnekli kaynaklar, olay kaydı, senaryoların dosyadan yüklenmesi | Senaryo dosyasıyla çalışan sistem, durum tablosu | ✅ |
 | 4 | [[01-Notlar/Haftalar/Hafta 04 - Deadlock Tespiti\|Deadlock Tespiti]] | RAG + DFS ile döngü arama, çok örnekli kaynaklar için detection algoritması, raporlama | Tespit modülü ve birim testleri | ✅ |
 | 5 | [[01-Notlar/Haftalar/Hafta 05 - Görselleştirme\|Görselleştirme]] | Graf çizimi, tutma/bekleme kenarları, döngünün vurgulanması | RAG ekranı | ✅ |
-| 6 | Risk Analizi | Banker's Algorithm ile güvenli durum kontrolü, istek öncesi uyarı | Güvenli/güvensiz durum uyarıları | |
+| 6 | [[01-Notlar/Haftalar/Hafta 06 - Risk Analizi\|Risk Analizi]] | Banker's Algorithm ile güvenli durum kontrolü, istek öncesi uyarı | Güvenli/güvensiz durum uyarıları | ✅ |
 | 7 | Risk Seviyesi Sistemi | Low/Medium/High/Critical seviyeleri ve nedenleri | Risk göstergesi ve açıklamalar | |
 | 8 | Recovery | Process sonlandırma, kaynak geri alma, en düşük maliyetli kurbanın seçilmesi, SAFE'e dönüş | Çalışan kurtarma modülü | |
 | 9 | Kullanıcı Arayüzü | Tüm modüllerin tek dashboard'da birleştirilmesi | Bütünleşik arayüz | |

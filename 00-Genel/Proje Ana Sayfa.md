@@ -1,7 +1,7 @@
 ---
 tags: [proje, isletim-sistemleri, deadlock-guardian]
 olusturma: 2026-09-23
-durum: hafta-6
+durum: hafta-7
 ---
 # Deadlock Guardian
 
@@ -28,7 +28,8 @@ https://github.com/eynalliomer/g.o.a.t-deadlock-guardian-project · her hafta `h
 - [[01-Notlar/Haftalar/Hafta 03 - Kaynak İlişkileri]] ✅
 - [[01-Notlar/Haftalar/Hafta 04 - Deadlock Tespiti]] ✅
 - [[01-Notlar/Haftalar/Hafta 05 - Görselleştirme]] ✅
-- Hafta 06 - Risk Analizi ← **şu anki hafta**
+- [[01-Notlar/Haftalar/Hafta 06 - Risk Analizi]] ✅
+- Hafta 07 - Risk Seviyesi Sistemi ← **şu anki hafta**
 
 ## Açık Kararlar
 - [ ] Arayüz: PyQt mı, basit web arayüzü mü?

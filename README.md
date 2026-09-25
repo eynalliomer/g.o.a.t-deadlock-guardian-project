@@ -23,8 +23,8 @@ Deadlock, birden fazla process'in birbirinin tuttuğu kaynağı beklemesi yüzü
 | 3 | Kaynak ilişkileri | ✅ Tamamlandı |
 | 4 | Deadlock tespiti | ✅ Tamamlandı |
 | 5 | Görselleştirme | ✅ Tamamlandı |
-| 6 | Risk analizi (Banker's Algorithm) | ⏳ Sırada |
-| 7 | Risk seviyesi sistemi | |
+| 6 | Risk analizi (Banker's Algorithm) | ✅ Tamamlandı |
+| 7 | Risk seviyesi sistemi | ⏳ Sırada |
 | 8 | Recovery | |
 | 9 | Kullanıcı arayüzü | |
 | 10 | Test ve iyileştirme | |
@@ -74,6 +74,13 @@ Deadlock tespitini görmek için (her adımda deadlock durumu konsolda, Resource
 ```bash
 python -m src.run_scenario scenarios/hafta4_deadlock.json            # deadlock oluşur
 python -m src.run_scenario scenarios/hafta4_dongu_deadlock_yok.json  # döngü var ama deadlock yok
+```
+
+Banker's Algorithm ile risk analizini görmek için (senaryoda `processes` bölümüyle Max bildirilir):
+
+```bash
+python -m src.run_scenario scenarios/hafta6_guvensiz_durum.json            # güvensiz durum uyarısı deadlock'tan önce gelir
+python -m src.run_scenario scenarios/hafta6_guvensiz_ama_deadlock_yok.json # güvensiz ama deadlock oluşmaz
 ```
 
 Testler:
