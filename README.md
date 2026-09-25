@@ -21,8 +21,8 @@ Deadlock, birden fazla process'in birbirinin tuttuğu kaynağı beklemesi yüzü
 | 1 | Konuyu anlama ve proje tasarımı | ✅ Tamamlandı |
 | 2 | Basit simülasyon | ✅ Tamamlandı |
 | 3 | Kaynak ilişkileri | ✅ Tamamlandı |
-| 4 | Deadlock tespiti | ⏳ Sırada |
-| 5 | Görselleştirme | |
+| 4 | Deadlock tespiti | ✅ Tamamlandı |
+| 5 | Görselleştirme | ⏳ Sırada |
 | 6 | Risk analizi (Banker's Algorithm) | |
 | 7 | Risk seviyesi sistemi | |
 | 8 | Recovery | |
@@ -67,6 +67,13 @@ Bir senaryoyu çalıştırmak (olay kaydı, durum tablosu ve `simulation_view.ht
 
 ```bash
 python -m src.run_scenario scenarios/hafta3_cok_ornekli.json
+```
+
+Deadlock tespitini görmek için (her adımda deadlock durumu konsolda ve `simulation_view.html`'de gösterilir):
+
+```bash
+python -m src.run_scenario scenarios/hafta4_deadlock.json            # deadlock oluşur
+python -m src.run_scenario scenarios/hafta4_dongu_deadlock_yok.json  # döngü var ama deadlock yok
 ```
 
 Testler:

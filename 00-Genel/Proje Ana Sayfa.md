@@ -1,7 +1,7 @@
 ---
 tags: [proje, isletim-sistemleri, deadlock-guardian]
 olusturma: 2026-09-23
-durum: hafta-2
+durum: hafta-5
 ---
 # Deadlock Guardian
 
@@ -24,7 +24,10 @@ https://github.com/eynalliomer/g.o.a.t-deadlock-guardian-project · her hafta `h
 
 ## Haftalar
 - [[01-Notlar/Haftalar/Hafta 01 - Konuyu Anlama ve Tasarım]] ✅
-- [[01-Notlar/Haftalar/Hafta 02 - Basit Simülasyon]] ← **şu anki hafta**
+- [[01-Notlar/Haftalar/Hafta 02 - Basit Simülasyon]] ✅
+- [[01-Notlar/Haftalar/Hafta 03 - Kaynak İlişkileri]] ✅
+- [[01-Notlar/Haftalar/Hafta 04 - Deadlock Tespiti]] ✅
+- Hafta 05 - Görselleştirme ← **şu anki hafta**
 
 ## Açık Kararlar
 - [ ] Arayüz: PyQt mı, basit web arayüzü mü?
@@ -36,3 +39,5 @@ https://github.com/eynalliomer/g.o.a.t-deadlock-guardian-project · her hafta `h
 
 ## İlerleme
 - [[03-Gunluk/2026-09-23]]
+- [[03-Gunluk/2026-09-24]]
+- [[03-Gunluk/2026-09-25]]
