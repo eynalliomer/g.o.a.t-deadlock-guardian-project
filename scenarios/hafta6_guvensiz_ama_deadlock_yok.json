@@ -1,0 +1,19 @@
+{
+    "description": "Güvensiz ≠ deadlock: P2 R2'yi alınca sistem güvensiz olur, ama P2 R2'yi geri bırakınca tekrar güvenli duruma döner ve deadlock hiç oluşmaz.",
+    "resources": [
+        {"name": "R1", "total_instances": 1},
+        {"name": "R2", "total_instances": 1}
+    ],
+    "processes": [
+        {"name": "P1", "max": {"R1": 1, "R2": 1}},
+        {"name": "P2", "max": {"R1": 1, "R2": 1}}
+    ],
+    "events": [
+        {"action": "acquire", "process": "P1", "resource": "R1"},
+        {"action": "acquire", "process": "P2", "resource": "R2"},
+        {"action": "release", "process": "P2", "resource": "R2"},
+        {"action": "acquire", "process": "P1", "resource": "R2"},
+        {"action": "release", "process": "P1", "resource": "R1"},
+        {"action": "release", "process": "P1", "resource": "R2"}
+    ]
+}

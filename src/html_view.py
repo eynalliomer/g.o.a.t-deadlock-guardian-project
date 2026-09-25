@@ -1,5 +1,15 @@
 from src.process import ProcessState
 from src.graph_view import render_rag_svg
+from src.bankers import safety_text
+
+
+def _claim_lines(process):
+    """Banker's için: Max ve Need = Max − Allocation (Max bildirilmemişse boş)."""
+    if process.max_claim is None:
+        return ""
+    fmt = lambda d: ", ".join(f"{r}×{n}" for r, n in d.items() if n) or "—"
+    need = {r: n - process.held_resources.get(r, 0) for r, n in process.max_claim.items()}
+    return f"<p><b>Max:</b> {fmt(process.max_claim)} · <b>Need:</b> {fmt(need)}</p>"
 
 
 def _process_card(process, deadlocked=False):
@@ -15,6 +25,7 @@ def _process_card(process, deadlocked=False):
         <h3>{process.name} {badge}</h3>
         <p><b>Durum:</b> <span style="color:{color}">{process.state.name}</span></p>
         <p><b>Elindeki kaynaklar:</b> {held}</p>
+        {_claim_lines(process)}
     </div>
     """
 
@@ -47,7 +58,17 @@ def _report_banner(report):
     return f'<div class="banner {level}">{report.summary()}</div>'
 
 
-def render_step(title: str, processes, resources, report=None) -> str:
+def _safety_banner(safety, decision):
+    if safety is None:
+        return ""
+    level = "ok" if safety[0] else "warning"
+    html = f'<div class="banner {level}">🏦 {safety_text(safety)}</div>'
+    if decision is not None and decision.status == "UNSAFE":
+        html += '<div class="banner danger">⚠ Bu istek sistemi güvensiz duruma soktu (Banker\'s bu isteği onaylamazdı).</div>'
+    return html
+
+
+def render_step(title: str, processes, resources, report=None, safety=None, decision=None) -> str:
     deadlocked = set(report.deadlocked) if report else set()
     process_cards = "".join(_process_card(p, p.name in deadlocked) for p in processes)
     resource_cards = "".join(_resource_card(r) for r in resources)
@@ -55,6 +76,7 @@ def render_step(title: str, processes, resources, report=None) -> str:
     <section class="step">
         <h2>{title}</h2>
         {_report_banner(report)}
+        {_safety_banner(safety, decision)}
         <div class="step-body">
             <div class="row cards">{process_cards}{resource_cards}</div>
             <div class="graph">{render_rag_svg(processes, resources, report)}</div>

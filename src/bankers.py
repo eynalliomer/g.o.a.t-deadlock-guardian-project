@@ -55,3 +55,43 @@ def check_request(process, request, available, maximum, allocation) -> RequestDe
 
     safe, sequence = is_safe(new_available, maximum, new_allocation)
     return RequestDecision("SAFE" if safe else "UNSAFE", sequence)
+
+
+# --- Simülasyon nesneleriyle (Process / Resource) çalışan yardımcılar ---
+
+def system_state(processes, resources):
+    """Process ve kaynaklardan (available, maximum, allocation) tablolarını kurar.
+
+    Max bildirmeyen bir process varsa Banker's uygulanamaz → None döner.
+    """
+    if not processes or any(p.max_claim is None for p in processes):
+        return None
+    available = {r.name: r.available_instances for r in resources}
+    # Max'ta adı geçmeyen kaynak için Max = 0 (o kaynağı hiç isteyemez).
+    maximum = {p.name: {r.name: p.max_claim.get(r.name, 0) for r in resources} for p in processes}
+    allocation = {p.name: dict(p.held_resources) for p in processes}
+    return available, maximum, allocation
+
+
+def safety_of(processes, resources):
+    """Sistemin şu anki durumu güvenli mi? (güvenli mi, güvenli sıra) ya da Banker's uygulanamıyorsa None."""
+    state = system_state(processes, resources)
+    return None if state is None else is_safe(*state)
+
+
+def evaluate_acquire(process, resource, amount, processes, resources):
+    """Bir acquire isteğini, gerçekleşmeden ÖNCE değerlendirir. Banker's uygulanamıyorsa None."""
+    state = system_state(processes, resources)
+    if state is None:
+        return None
+    return check_request(process.name, {resource.name: amount}, *state)
+
+
+def safety_text(safety) -> str:
+    """safety_of() sonucunu konsol ve arayüz için okunur metne çevirir."""
+    if safety is None:
+        return "Banker's analizi yok (senaryoda Max bildirilmemiş)."
+    safe, sequence = safety
+    if safe:
+        return f"Güvenli durum. Güvenli sıra: {' → '.join(sequence)}"
+    return "GÜVENSİZ durum: güvenli sıra yok, deadlock oluşabilir."

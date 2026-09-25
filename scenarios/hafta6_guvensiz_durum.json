@@ -1,0 +1,17 @@
+{
+    "description": "Hafta 4'teki klasik deadlock, bu kez Max bildirimleriyle: Banker's, deadlock oluşmadan iki adım önce (P2 R2'yi aldığında) sistemin güvensiz duruma düştüğünü söyler.",
+    "resources": [
+        {"name": "R1", "total_instances": 1},
+        {"name": "R2", "total_instances": 1}
+    ],
+    "processes": [
+        {"name": "P1", "max": {"R1": 1, "R2": 1}},
+        {"name": "P2", "max": {"R1": 1, "R2": 1}}
+    ],
+    "events": [
+        {"action": "acquire", "process": "P1", "resource": "R1"},
+        {"action": "acquire", "process": "P2", "resource": "R2"},
+        {"action": "acquire", "process": "P1", "resource": "R2"},
+        {"action": "acquire", "process": "P2", "resource": "R1"}
+    ]
+}
