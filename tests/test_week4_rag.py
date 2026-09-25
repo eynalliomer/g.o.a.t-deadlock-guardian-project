@@ -59,3 +59,18 @@ def test_dongu_disindaki_process_donguye_dahil_edilmez():
 
     cycle = find_cycle(build_rag([r1, r2]))
     assert "P3" not in cycle
+
+
+def test_uc_processli_dongu_bulunur():
+    p1, p2, p3 = Process("P1"), Process("P2"), Process("P3")
+    r1, r2, r3 = Resource("R1"), Resource("R2"), Resource("R3")
+
+    r1.acquire(p1)
+    r2.acquire(p2)
+    r3.acquire(p3)
+    r2.acquire(p1)  # P1 → R2 → P2
+    r3.acquire(p2)  # P2 → R3 → P3
+    r1.acquire(p3)  # P3 → R1 → P1 → döngü kapandı
+
+    cycle = find_cycle(build_rag([r1, r2, r3]))
+    assert set(cycle) == {"P1", "P2", "P3", "R1", "R2", "R3"}

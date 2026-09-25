@@ -44,3 +44,38 @@ def find_cycle(graph: dict):
             if cycle:
                 return cycle
     return None
+
+
+def detect_deadlock(resources) -> list:
+    """Çok örnekli kaynaklar için tespit algoritması (Silberschatz 8.7.2).
+
+    Deadlock'taki process adlarını sıralı liste olarak döner; deadlock yoksa boş liste.
+    """
+    work = {r.name: r.available_instances for r in resources}
+    allocation = {}  # {process_adı: {kaynak_adı: tutulan_adet}}
+    request = {}  # {process_adı: {kaynak_adı: beklenen_adet}}
+    for resource in resources:
+        for process, amount in resource.allocation.items():
+            allocation.setdefault(process.name, {})[resource.name] = amount
+            request.setdefault(process.name, {})
+        for process, amount in resource.waiting_queue:
+            request.setdefault(process.name, {})[resource.name] = amount
+            allocation.setdefault(process.name, {})
+
+    # Elinde hiçbir şey olmayan process kimseyi kilitleyemez → baştan bitmiş sayılır.
+    finish = {name: not held for name, held in allocation.items()}
+
+    progress = True
+    while progress:
+        progress = False
+        for name in finish:
+            if finish[name]:
+                continue
+            if all(amount <= work[r] for r, amount in request[name].items()):
+                # P'nin isteği karşılanabiliyor → işini bitirip elindekileri bırakacağını varsay.
+                for r, amount in allocation[name].items():
+                    work[r] += amount
+                finish[name] = True
+                progress = True
+
+    return sorted(name for name, done in finish.items() if not done)
