@@ -1,106 +1,36 @@
-import json
 import sys
 
-from src.process import Process
-from src.resource import Resource
-from src.event_log import EventLog
 from src.state_table import print_state_table
 from src.html_view import render_step, save_html
-from src.detection import analyze
-from src.bankers import safety_of, evaluate_acquire, safety_text
-from src.scenario_loader import declared_processes
-from src.risk import assess_risk
-from src.recovery import recovery_options, recover, make_option, apply_option
-from src.process import ProcessState
-
-
-def _record(event_log, option):
-    resource_name = option.resource.name if option.resource else "tümü"
-    event_log.log("RECOVERY", option.process.name, resource_name, option.freed_units,
-                  f"{option.label()} (maliyet {option.cost})")
+from src.bankers import safety_text
+from src.engine import Simulation
 
 
 def run_scenario_step_by_step(path: str):
-    with open(path, "r", encoding="utf-8") as f:
-        data = json.load(f)
+    """Senaryoyu baştan sona motorla oynatır ve her adım için HTML üretir (statik önizleme)."""
+    sim = Simulation.from_file(path)
 
-    event_log = EventLog()
-    resources = {
-        r["name"]: Resource(r["name"], total_instances=r.get("total_instances", 1), event_log=event_log)
-        for r in data["resources"]
-    }
-    processes = declared_processes(data)  # Max bildirenler baştan sistemde
-    report = analyze(list(resources.values()))
-    safety = safety_of(list(processes.values()), list(resources.values()))
-    risk = assess_risk(list(processes.values()), list(resources.values()))
-    risk_timeline = [risk]
-    steps_html = [
-        render_step("0. Başlangıç", list(processes.values()), list(resources.values()), report, safety, None, risk)
-    ]
-    unsafe_steps = []  # sistemi güvensiz duruma sokan isteklerin başlıkları
+    def render(title, step=None):
+        a = sim.analysis()
+        return render_step(title, sim.process_list, sim.resource_list, a.report, a.safety,
+                           step.decision if step else None, a.risk,
+                           options=a.options, applied=step.applied if step else None)
 
-    def get_process(name: str) -> Process:
-        if name not in processes:
-            processes[name] = Process(name)
-        return processes[name]
+    steps_html = [render("0. Başlangıç")]
+    while (step := sim.step()) is not None:
+        steps_html.append(render(step.title, step))
 
-    for i, event in enumerate(data["events"], start=1):
-        decision = None
-        applied = []  # bu adımda uygulanan kurtarma seçenekleri
-        action = event["action"]
-
-        if action == "recover":
-            # Otomatik kurtarma: en ucuz seçeneği uygula, tespiti tekrarla, deadlock bitene kadar.
-            applied = recover(list(processes.values()), list(resources.values()),
-                              on_apply=lambda option: _record(event_log, option))
-            title = f"{i}. Recovery: " + (", ".join(o.label() for o in applied) or "deadlock yok, işlem gerekmedi")
-        else:
-            process = get_process(event["process"])
-            if process.state == ProcessState.TERMINATED:
-                raise ValueError(f"{process.name} sonlandırıldı, yeni olay alamaz (olay {i}).")
-            resource = resources.get(event.get("resource"))
-            amount = event.get("amount", 1)
-
-        if action in ("terminate", "preempt"):
-            # Elle kurtarma: kurbanı (ve geri almada kaynağı) senaryo seçer.
-            option = make_option(action, process, resource)
-            _record(event_log, option)
-            apply_option(option, list(resources.values()))
-            applied = [option]
-            title = f"{i}. Recovery: {option.label()}"
-        elif action == "acquire":
-            # Banker's: isteği gerçekleştirmeden ÖNCE değerlendir (bu hafta yalnızca uyarır, engellemez).
-            decision = evaluate_acquire(process, resource, amount, list(processes.values()), list(resources.values()))
-            resource.acquire(process, amount)
-            title = f"{i}. {process.name}, {resource.name}'den {amount} birim istiyor"
-        elif action == "release":
-            resource.release(process, amount)
-            title = f"{i}. {process.name}, {resource.name}'den {amount} birim bırakıyor"
-        elif action != "recover":
-            raise ValueError(f"Bilinmeyen action: {action}")
-
-        report = analyze(list(resources.values()))
-        safety = safety_of(list(processes.values()), list(resources.values()))
-        risk = assess_risk(list(processes.values()), list(resources.values()))
-        risk_timeline.append(risk)
-        if decision is not None and decision.status == "UNSAFE":
-            unsafe_steps.append(title)
-        options = recovery_options(list(processes.values()), list(resources.values()))
-        steps_html.append(
-            render_step(title, list(processes.values()), list(resources.values()), report, safety, decision, risk,
-                        options=options, applied=applied)
-        )
-
+    final = sim.analysis()
     return {
-        "description": data.get("description", ""),
-        "processes": processes,
-        "resources": resources,
-        "event_log": event_log,
+        "description": sim.description,
+        "processes": sim.processes,
+        "resources": sim.resources,
+        "event_log": sim.event_log,
         "steps_html": steps_html,
-        "report": report,
-        "safety": safety,
-        "unsafe_steps": unsafe_steps,
-        "risk_timeline": risk_timeline,
+        "report": final.report,
+        "safety": final.safety,
+        "unsafe_steps": [s.title for s in sim.history if s.decision is not None and s.decision.status == "UNSAFE"],
+        "risk_timeline": [sim.initial_risk] + [s.risk for s in sim.history],
     }
 
 
