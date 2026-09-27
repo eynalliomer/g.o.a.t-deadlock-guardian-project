@@ -24,11 +24,10 @@ def _row_positions(names, width):
 
 
 def _cycle_edges(report):
-    """Döngüdeki ardışık düğüm çiftleri (u, v); son düğümden başa dönüş dahil."""
-    if report is None or not report.cycle:
+    """Bütün döngülerdeki ardışık düğüm çiftleri (u, v); son düğümden başa dönüş dahil."""
+    if report is None:
         return set()
-    cycle = report.cycle
-    return {(cycle[i], cycle[(i + 1) % len(cycle)]) for i in range(len(cycle))}
+    return {(cycle[i], cycle[(i + 1) % len(cycle)]) for cycle in report.cycles for i in range(len(cycle))}
 
 
 def _arrow(x1, y1, x2, y2, kind, hot, label="", hot_color=HOT):

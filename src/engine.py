@@ -141,7 +141,7 @@ class Simulation:
         if kind == "recover":
             # Otomatik kurtarma: en ucuz seçeneği uygula, tespiti tekrarla, deadlock bitene kadar.
             applied = recover(self.process_list, self.resource_list, on_apply=self._record)
-            title = f"{n}. Recovery: " + (", ".join(o.label() for o in applied) or "deadlock yok, işlem gerekmedi")
+            title = f"{n}. Recovery: " + ("; ".join(o.label() for o in applied) or "deadlock yok, işlem gerekmedi")
         else:
             # Durumu değiştirmeden önce eylemi doğrula: hatalı eylem sistemi yarım bırakmasın.
             name = action.get("process")

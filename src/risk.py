@@ -37,7 +37,7 @@ def assess_risk(processes, resources) -> RiskAssessment:
 
     if report.has_deadlock:
         findings.append((RiskLevel.CRITICAL,
-                         f"DEADLOCK: {', '.join(report.deadlocked)} takılı. Döngü: {report.cycle_path()}"))
+                         f"DEADLOCK: {', '.join(report.deadlocked)} takılı. {report.cycles_text()}"))
 
     if safety is not None and not safety[0]:
         findings.append((RiskLevel.HIGH, "Sistem güvensiz: Banker's güvenli sıra bulamıyor."))

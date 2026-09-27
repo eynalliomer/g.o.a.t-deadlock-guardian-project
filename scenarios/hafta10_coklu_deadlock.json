@@ -1,0 +1,17 @@
+{
+    "description": "Çoklu deadlock: P1-P2 (R1, R2) ve P3-P4 (R3, R4) birbirinden bağımsız iki ayrı döngü oluşturuyor. İki döngü ayrı raporlanır; recovery ikisini de çözer.",
+    "resources": [
+        {"name": "R1"}, {"name": "R2"}, {"name": "R3"}, {"name": "R4"}
+    ],
+    "events": [
+        {"action": "acquire", "process": "P1", "resource": "R1"},
+        {"action": "acquire", "process": "P2", "resource": "R2"},
+        {"action": "acquire", "process": "P3", "resource": "R3"},
+        {"action": "acquire", "process": "P4", "resource": "R4"},
+        {"action": "acquire", "process": "P1", "resource": "R2"},
+        {"action": "acquire", "process": "P2", "resource": "R1"},
+        {"action": "acquire", "process": "P3", "resource": "R4"},
+        {"action": "acquire", "process": "P4", "resource": "R3"},
+        {"action": "recover"}
+    ]
+}

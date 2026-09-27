@@ -70,6 +70,25 @@ def detect_deadlock(resources) -> list:
     return sorted(stuck)
 
 
+def find_cycles(graph: dict) -> list:
+    """Birbirinden ayrık (ortak düğümü olmayan) bütün döngüleri bulur.
+
+    Bir döngü bulunca onun düğümlerini graftan çıkarıp aramayı tekrarlar; böylece
+    birbirinden bağımsız iki deadlock ayrı ayrı raporlanır.
+    """
+    remaining = {node: list(neighbors) for node, neighbors in graph.items()}
+    cycles = []
+    while (cycle := find_cycle(remaining)) is not None:
+        cycles.append(cycle)
+        removed = set(cycle)
+        remaining = {
+            node: [n for n in neighbors if n not in removed]
+            for node, neighbors in remaining.items()
+            if node not in removed
+        }
+    return cycles
+
+
 def run_to_completion(work, demand, allocation, finished):
     """Work/Finish döngüsü: tespit algoritması ve Banker's güvenlik kontrolünün ortak çekirdeği.
 
@@ -100,23 +119,38 @@ def run_to_completion(work, demand, allocation, finished):
 @dataclass
 class DeadlockReport:
     deadlocked: list  # deadlock'taki process adları (tespit algoritmasına göre)
-    cycle: list | None  # RAG'de bulunan döngü (varsa)
+    cycles: list  # RAG'deki birbirinden ayrık döngüler (yoksa boş)
+
+    @property
+    def cycle(self):
+        """İlk döngü (yoksa None); tek döngülü kullanım için."""
+        return self.cycles[0] if self.cycles else None
 
     @property
     def has_deadlock(self) -> bool:
         return bool(self.deadlocked)
 
-    def cycle_path(self) -> str:
-        if not self.cycle:
-            return ""
+    @staticmethod
+    def format_cycle(cycle) -> str:
         # Aynı döngü hep aynı yazılsın diye alfabetik en küçük düğümden başlat (ör. P1 → R2 → ...).
-        start = self.cycle.index(min(self.cycle))
-        ordered = self.cycle[start:] + self.cycle[:start]
+        start = cycle.index(min(cycle))
+        ordered = cycle[start:] + cycle[:start]
         return " → ".join(ordered + [ordered[0]])
+
+    def cycle_path(self) -> str:
+        """Bütün döngüler; birden fazlaysa numaralı (Döngü 1: ..., Döngü 2: ...)."""
+        paths = [self.format_cycle(c) for c in self.cycles]
+        if len(paths) <= 1:
+            return "".join(paths)
+        return " | ".join(f"Döngü {i}: {p}" for i, p in enumerate(paths, start=1))
+
+    def cycles_text(self) -> str:
+        """Etiketiyle birlikte döngü metni: "Döngü: ..." ya da "Döngü 1: ... | Döngü 2: ..."."""
+        return self.cycle_path() if len(self.cycles) > 1 else f"Döngü: {self.cycle_path()}"
 
     def summary(self) -> str:
         if self.has_deadlock:
-            return f"DEADLOCK! Takılı processler: {', '.join(self.deadlocked)} | Döngü: {self.cycle_path()}"
+            return f"DEADLOCK! Takılı processler: {', '.join(self.deadlocked)} | {self.cycles_text()}"
         if self.cycle:
             return f"Döngü var ({self.cycle_path()}) ama deadlock yok: çok örnekli kaynak sayesinde çözülebilir."
         return "Deadlock yok."
@@ -126,5 +160,5 @@ def analyze(resources) -> DeadlockReport:
     """RAG döngü aramasını ve tespit algoritmasını birlikte çalıştırıp tek raporda toplar."""
     return DeadlockReport(
         deadlocked=detect_deadlock(resources),
-        cycle=find_cycle(build_rag(resources)),
+        cycles=find_cycles(build_rag(resources)),
     )

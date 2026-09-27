@@ -1,0 +1,22 @@
+{
+    "description": "Normal çalışma: üç process kaynakları sırayla alıp bırakıyor; kimse beklemiyor, sistem her adımda güvenli ve risk hep LOW.",
+    "resources": [
+        {"name": "R1", "total_instances": 3},
+        {"name": "R2", "total_instances": 2}
+    ],
+    "processes": [
+        {"name": "P1", "max": {"R1": 1, "R2": 1}},
+        {"name": "P2", "max": {"R1": 2}},
+        {"name": "P3", "max": {"R2": 1}}
+    ],
+    "events": [
+        {"action": "acquire", "process": "P1", "resource": "R1"},
+        {"action": "acquire", "process": "P1", "resource": "R2"},
+        {"action": "acquire", "process": "P2", "resource": "R1", "amount": 2},
+        {"action": "release", "process": "P1", "resource": "R2"},
+        {"action": "release", "process": "P1", "resource": "R1"},
+        {"action": "acquire", "process": "P3", "resource": "R2"},
+        {"action": "release", "process": "P2", "resource": "R1", "amount": 2},
+        {"action": "release", "process": "P3", "resource": "R2"}
+    ]
+}
