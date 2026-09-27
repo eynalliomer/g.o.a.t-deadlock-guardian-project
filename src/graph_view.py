@@ -5,6 +5,8 @@ Bu yüzden processleri üst sıraya, kaynakları alt sıraya dizmek yeterli; bü
 iki sıra arasında akar ve hiçbir kenar bir düğümün içinden geçmez.
 """
 
+from src.process import ProcessState
+
 SPACING = 140  # aynı sıradaki iki düğüm arası yatay mesafe
 PROCESS_Y = 60  # process sırasının merkez yüksekliği
 RESOURCE_Y = 210  # kaynak dikdörtgenlerinin üst kenarı
@@ -74,6 +76,8 @@ def render_rag_svg(processes, resources, report=None) -> str:
         css = "node process deadlocked" if is_dead else "node process"
         fill = "#fdedec" if is_dead else "white"
         stroke = HOT if is_dead else NORMAL
+        if p.state == ProcessState.TERMINATED:  # sonlandırılan process soluk ve kesikli çizilir
+            css, fill, stroke = "node process terminated", "#ecf0f1", "#bbb\" stroke-dasharray=\"4,3"
         parts.append(
             f'<g class="{css}"><circle cx="{px[p.name]}" cy="{PROCESS_Y}" r="{RADIUS}" '
             f'fill="{fill}" stroke="{stroke}" stroke-width="2"/>'

@@ -8,7 +8,7 @@ from src.event_log import EventLog
 def declared_processes(data) -> dict:
     """Senaryonun (opsiyonel) processes bölümündeki processleri Max bildirimleriyle oluşturur."""
     return {
-        p["name"]: Process(p["name"], max_claim=p.get("max"))
+        p["name"]: Process(p["name"], max_claim=p.get("max"), priority=p.get("priority", 1))
         for p in data.get("processes", [])
     }
 

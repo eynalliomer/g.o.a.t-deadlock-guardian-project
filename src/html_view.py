@@ -13,9 +13,12 @@ def _claim_lines(process):
 
 
 def _process_card(process, deadlocked=False):
-    color = "#2ecc71" if process.state == ProcessState.READY else "#e74c3c"
+    color = {ProcessState.READY: "#2ecc71", ProcessState.WAITING: "#e74c3c",
+             ProcessState.TERMINATED: "#95a5a6"}[process.state]
     badge = '<span class="badge">DEADLOCK</span>' if deadlocked else ""
     extra_class = " deadlocked" if deadlocked else ""
+    if process.state == ProcessState.TERMINATED:
+        extra_class = " terminated"
     if process.held_resources:
         held = ", ".join(f"{name}×{amount}" for name, amount in process.held_resources.items())
     else:
@@ -96,7 +99,30 @@ def _risk_timeline(risk_timeline):
     return f'<div class="timeline"><b>Risk seyri:</b> {chips}</div>'
 
 
-def render_step(title: str, processes, resources, report=None, safety=None, decision=None, risk=None) -> str:
+def _recovery_panel(options, applied):
+    """Deadlock varken kurtarma seçenekleri (en ucuzu önerilen); bu adımda uygulanan kurtarma."""
+    html = ""
+    if applied:
+        items = "".join(f"<li>{o.label()} (maliyet {o.cost})</li>" for o in applied)
+        html += f'<div class="recovery applied"><b>🛠 Uygulanan kurtarma:</b><ul>{items}</ul></div>'
+    if options:
+        rows = "".join(
+            f'<tr class="{"best" if i == 0 else ""}"><td>{o.label()}</td><td>{o.cost}</td>'
+            f'<td>{"✅ önerilen" if i == 0 else ""}</td></tr>'
+            for i, o in enumerate(options)
+        )
+        html += f"""
+        <div class="recovery">
+            <b>🛠 Kurtarma seçenekleri</b>
+            <span class="formula">maliyet = öncelik×10 − serbest bırakılan birim×2 + kurban sayısı×5</span>
+            <table><tr><th>Seçenek</th><th>Maliyet</th><th></th></tr>{rows}</table>
+        </div>
+        """
+    return html
+
+
+def render_step(title: str, processes, resources, report=None, safety=None, decision=None, risk=None,
+                options=None, applied=None) -> str:
     deadlocked = set(report.deadlocked) if report else set()
     process_cards = "".join(_process_card(p, p.name in deadlocked) for p in processes)
     resource_cards = "".join(_resource_card(r) for r in resources)
@@ -106,6 +132,7 @@ def render_step(title: str, processes, resources, report=None, safety=None, deci
         {_risk_panel(risk)}
         {_report_banner(report)}
         {_safety_banner(safety, decision)}
+        {_recovery_panel(options, applied)}
         <div class="step-body">
             <div class="row cards">{process_cards}{resource_cards}</div>
             <div class="graph">{render_rag_svg(processes, resources, report)}</div>
@@ -143,6 +170,15 @@ def save_html(steps_html: list[str], risk_timeline=None, out_path: str = "simula
         .risk { border-left:6px solid; background:white; border-radius:6px; padding:8px 12px; margin-bottom:10px; }
         .risk ul { margin:6px 0 0 0; padding-left:20px; }
         .risk-badge { color:white; font-weight:bold; padding:3px 10px; border-radius:4px; }
+        .card.terminated { opacity:0.55; background:#ecf0f1; }
+        .recovery { background:white; border:1px solid #ddd; border-left:6px solid #8e44ad;
+                    border-radius:6px; padding:8px 12px; margin-bottom:10px; }
+        .recovery.applied { border-left-color:#27ae60; }
+        .recovery ul { margin:6px 0 0 0; padding-left:20px; }
+        .recovery table { border-collapse:collapse; margin-top:6px; }
+        .recovery td, .recovery th { padding:3px 12px; text-align:left; border-bottom:1px solid #eee; }
+        .recovery tr.best { background:#e8f8ef; font-weight:bold; }
+        .formula { color:#777; font-size:12px; margin-left:10px; }
         .timeline { display:flex; gap:6px; align-items:center; margin-bottom:10px; flex-wrap:wrap; }
         .chip { color:white; font-weight:bold; font-size:12px; width:26px; height:26px; line-height:26px;
                 text-align:center; border-radius:50%; cursor:pointer; }

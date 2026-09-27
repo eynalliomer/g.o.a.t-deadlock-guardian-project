@@ -10,6 +10,14 @@ from src.detection import analyze
 from src.bankers import safety_of, evaluate_acquire, safety_text
 from src.scenario_loader import declared_processes
 from src.risk import assess_risk
+from src.recovery import recovery_options, recover, make_option, apply_option
+from src.process import ProcessState
+
+
+def _record(event_log, option):
+    resource_name = option.resource.name if option.resource else "tümü"
+    event_log.log("RECOVERY", option.process.name, resource_name, option.freed_units,
+                  f"{option.label()} (maliyet {option.cost})")
 
 
 def run_scenario_step_by_step(path: str):
@@ -37,21 +45,39 @@ def run_scenario_step_by_step(path: str):
         return processes[name]
 
     for i, event in enumerate(data["events"], start=1):
-        process = get_process(event["process"])
-        resource = resources[event["resource"]]
-        amount = event.get("amount", 1)
-
         decision = None
-        if event["action"] == "acquire":
+        applied = []  # bu adımda uygulanan kurtarma seçenekleri
+        action = event["action"]
+
+        if action == "recover":
+            # Otomatik kurtarma: en ucuz seçeneği uygula, tespiti tekrarla, deadlock bitene kadar.
+            applied = recover(list(processes.values()), list(resources.values()),
+                              on_apply=lambda option: _record(event_log, option))
+            title = f"{i}. Recovery: " + (", ".join(o.label() for o in applied) or "deadlock yok, işlem gerekmedi")
+        else:
+            process = get_process(event["process"])
+            if process.state == ProcessState.TERMINATED:
+                raise ValueError(f"{process.name} sonlandırıldı, yeni olay alamaz (olay {i}).")
+            resource = resources.get(event.get("resource"))
+            amount = event.get("amount", 1)
+
+        if action in ("terminate", "preempt"):
+            # Elle kurtarma: kurbanı (ve geri almada kaynağı) senaryo seçer.
+            option = make_option(action, process, resource)
+            _record(event_log, option)
+            apply_option(option, list(resources.values()))
+            applied = [option]
+            title = f"{i}. Recovery: {option.label()}"
+        elif action == "acquire":
             # Banker's: isteği gerçekleştirmeden ÖNCE değerlendir (bu hafta yalnızca uyarır, engellemez).
             decision = evaluate_acquire(process, resource, amount, list(processes.values()), list(resources.values()))
             resource.acquire(process, amount)
             title = f"{i}. {process.name}, {resource.name}'den {amount} birim istiyor"
-        elif event["action"] == "release":
+        elif action == "release":
             resource.release(process, amount)
             title = f"{i}. {process.name}, {resource.name}'den {amount} birim bırakıyor"
-        else:
-            raise ValueError(f"Bilinmeyen action: {event['action']}")
+        elif action != "recover":
+            raise ValueError(f"Bilinmeyen action: {action}")
 
         report = analyze(list(resources.values()))
         safety = safety_of(list(processes.values()), list(resources.values()))
@@ -59,8 +85,10 @@ def run_scenario_step_by_step(path: str):
         risk_timeline.append(risk)
         if decision is not None and decision.status == "UNSAFE":
             unsafe_steps.append(title)
+        options = recovery_options(list(processes.values()), list(resources.values()))
         steps_html.append(
-            render_step(title, list(processes.values()), list(resources.values()), report, safety, decision, risk)
+            render_step(title, list(processes.values()), list(resources.values()), report, safety, decision, risk,
+                        options=options, applied=applied)
         )
 
     return {

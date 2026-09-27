@@ -53,6 +53,10 @@ class Resource:
         self._log("RELEASED", process, amount)
         self._serve_waiting_queue()
 
+    def cancel_wait(self, process):
+        """Process'in bu kaynaktaki bekleyen isteğini iptal eder (recovery'de sonlandırma için)."""
+        self.waiting_queue = [(p, n) for p, n in self.waiting_queue if p is not process]
+
     def _serve_waiting_queue(self):
         still_waiting = []
         for waiting_process, wanted_amount in self.waiting_queue:

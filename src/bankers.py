@@ -5,6 +5,7 @@ Bütün tablolar sözlük: {process_adı: {kaynak_adı: adet}}, available ise {k
 from dataclasses import dataclass
 
 from src.detection import run_to_completion
+from src.process import ProcessState
 
 
 def compute_need(maximum, allocation) -> dict:
@@ -63,7 +64,9 @@ def system_state(processes, resources):
     """Process ve kaynaklardan (available, maximum, allocation) tablolarını kurar.
 
     Max bildirmeyen bir process varsa Banker's uygulanamaz → None döner.
+    Sonlandırılmış processler artık kaynak istemeyeceği için hesaba katılmaz.
     """
+    processes = [p for p in processes if p.state != ProcessState.TERMINATED]
     if not processes or any(p.max_claim is None for p in processes):
         return None
     available = {r.name: r.available_instances for r in resources}
