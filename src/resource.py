@@ -1,4 +1,5 @@
 from src.process import ProcessState
+from src.turkish import ablative
 
 
 class Resource:
@@ -23,11 +24,11 @@ class Resource:
 
     def acquire(self, process, amount: int = 1) -> bool:
         if amount < 1:
-            raise ValueError(f"{process.name}, {self.name}'den en az 1 birim istemeli (istenen: {amount}).")
+            raise ValueError(f"{process.name}, {ablative(self.name)} en az 1 birim istemeli (istenen: {amount}).")
         if amount > self.total_instances:
             # Hiçbir zaman karşılanamaz: bekletmek sonsuz beklemeye (starvation) yol açardı.
             raise ValueError(
-                f"{process.name}, {self.name}'nin toplam adedinden ({self.total_instances}) fazla isteyemez "
+                f"{process.name}, {self.name} kaynağının toplam adedinden ({self.total_instances}) fazla isteyemez "
                 f"(istenen: {amount})."
             )
         if amount > self.available_instances:
@@ -45,7 +46,7 @@ class Resource:
 
     def release(self, process, amount: int = 1):
         if amount < 1:
-            raise ValueError(f"{process.name}, {self.name}'den en az 1 birim bırakmalı (istenen: {amount}).")
+            raise ValueError(f"{process.name}, {ablative(self.name)} en az 1 birim bırakmalı (istenen: {amount}).")
         held = self.allocation.get(process, 0)
         if amount > held:
             raise ValueError(

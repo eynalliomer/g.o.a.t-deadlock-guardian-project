@@ -7,6 +7,7 @@ from src.bankers import safety_text
 from src.graph_view import render_rag_svg
 from src.html_view import RISK_COLORS, process_card, resource_card
 from src.process import ProcessState
+from src.turkish import ablative
 
 
 def describe_event(event) -> str:
@@ -18,7 +19,7 @@ def describe_event(event) -> str:
     if kind == "preempt":
         return f"Geri al: {event['resource']}, sahibi {event['process']}"
     verb = "istiyor" if kind == "acquire" else "bırakıyor"
-    return f"{event['process']}, {event['resource']}'den {event.get('amount', 1)} birim {verb}"
+    return f"{event['process']}, {ablative(event['resource'])} {event.get('amount', 1)} birim {verb}"
 
 
 def _button(path, label, disabled=False, css=""):

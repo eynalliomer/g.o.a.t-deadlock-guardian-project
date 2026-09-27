@@ -15,6 +15,7 @@ from src.process import Process, ProcessState
 from src.recovery import apply_option, make_option, recover, recovery_options
 from src.resource import Resource
 from src.risk import assess_risk
+from src.turkish import ablative
 
 ACTIONS = {"acquire", "release", "recover", "terminate", "preempt"}
 
@@ -170,10 +171,10 @@ class Simulation:
                 # Banker's: isteği gerçekleştirmeden ÖNCE değerlendir (yalnızca uyarır, engellemez).
                 decision = evaluate_acquire(process, resource, amount, self.process_list, self.resource_list)
                 resource.acquire(process, amount)
-                title = f"{n}. {process.name}, {resource.name}'den {amount} birim istiyor"
+                title = f"{n}. {process.name}, {ablative(resource.name)} {amount} birim istiyor"
             else:  # release
                 resource.release(process, amount)
-                title = f"{n}. {process.name}, {resource.name}'den {amount} birim bırakıyor"
+                title = f"{n}. {process.name}, {ablative(resource.name)} {amount} birim bırakıyor"
 
         step = Step(title, action, from_scenario, assess_risk(self.process_list, self.resource_list),
                     decision, applied)

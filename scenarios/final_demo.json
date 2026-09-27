@@ -1,0 +1,25 @@
+{
+    "description": "FİNAL DEMO: 3 process, 3 kaynak. Normal çalışma (LOW) → P3 beklemeye geçer (MEDIUM) → P2'nin isteği sistemi güvensiz yapar (HIGH) → P1 ile P2 birbirini bekler, deadlock (CRITICAL) → önerilen kurban P1 sonlandırılır → sistem SAFE durumuna döner ve processler işini bitirir.",
+    "resources": [
+        {"name": "R1", "total_instances": 1},
+        {"name": "R2", "total_instances": 1},
+        {"name": "R3", "total_instances": 2}
+    ],
+    "processes": [
+        {"name": "P1", "max": {"R1": 1, "R2": 1, "R3": 1}},
+        {"name": "P2", "max": {"R1": 1, "R2": 1}},
+        {"name": "P3", "max": {"R3": 2}}
+    ],
+    "events": [
+        {"action": "acquire", "process": "P1", "resource": "R1"},
+        {"action": "acquire", "process": "P1", "resource": "R3"},
+        {"action": "acquire", "process": "P3", "resource": "R3", "amount": 2},
+        {"action": "acquire", "process": "P2", "resource": "R2"},
+        {"action": "acquire", "process": "P1", "resource": "R2"},
+        {"action": "acquire", "process": "P2", "resource": "R1"},
+        {"action": "recover"},
+        {"action": "release", "process": "P2", "resource": "R1"},
+        {"action": "release", "process": "P2", "resource": "R2"},
+        {"action": "release", "process": "P3", "resource": "R3", "amount": 2}
+    ]
+}
