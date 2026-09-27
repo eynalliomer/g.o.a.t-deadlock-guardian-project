@@ -65,7 +65,7 @@ Kullanıcı düğmeye basar → tarayıcı POST isteği gönderir → controller
 
 ```bash
 pip install -r requirements.txt   # flask eklendi
-python -m src.app                 # http://127.0.0.1:5000
+python -m src.app                 # http://127.0.0.1:5050 (hafta 10'da 5000'den taşındı: macOS AirPlay çakışması)
 ```
 
 ### 7) Testler

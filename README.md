@@ -27,8 +27,8 @@ Deadlock, birden fazla process'in birbirinin tuttuğu kaynağı beklemesi yüzü
 | 7 | Risk seviyesi sistemi | ✅ Tamamlandı |
 | 8 | Recovery | ✅ Tamamlandı |
 | 9 | Kullanıcı arayüzü | ✅ Tamamlandı |
-| 10 | Test ve iyileştirme | ⏳ Sırada |
-| 11 | Final: demo, rapor, sunum | |
+| 10 | Test ve iyileştirme | ✅ Tamamlandı |
+| 11 | Final: demo, rapor, sunum | ⏳ Sırada |
 
 Her haftanın sonu Git'te `hafta-01`, `hafta-02`… etiketleriyle işaretlenir.
 
@@ -66,7 +66,7 @@ pip install -r requirements.txt
 **Web arayüzü (dashboard):**
 
 ```bash
-python -m src.app      # ardından tarayıcıda http://127.0.0.1:5000
+python -m src.app      # ardından tarayıcıda http://127.0.0.1:5050
 ```
 
 Senaryo seçip adım adım ilerletebilir, geri alabilir, deadlock anında kurtarma seçeneklerinden birini düğmeyle uygulayabilir ve senaryo dışı elle eylem yapabilirsiniz.
@@ -102,5 +102,8 @@ python -m src.run_scenario scenarios/hafta8_recovery.json
 Testler:
 
 ```bash
-python -m pytest tests/ -v
+python -m pytest tests/ -v          # 127 test
+python -m pytest tests/ --cov=src   # kod kapsamıyla (%99)
 ```
+
+Test sonuçları, bulunan hatalar ve kapsam: [Test raporu](02-Tasarim/Test%20Raporu.md)

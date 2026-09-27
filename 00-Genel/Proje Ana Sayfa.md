@@ -1,7 +1,7 @@
 ---
 tags: [proje, isletim-sistemleri, deadlock-guardian]
 olusturma: 2026-09-23
-durum: hafta-10
+durum: hafta-11
 ---
 # Deadlock Guardian
 
@@ -32,7 +32,8 @@ https://github.com/eynalliomer/g.o.a.t-deadlock-guardian-project · her hafta `h
 - [[01-Notlar/Haftalar/Hafta 07 - Risk Seviyesi Sistemi]] ✅
 - [[01-Notlar/Haftalar/Hafta 08 - Recovery]] ✅
 - [[01-Notlar/Haftalar/Hafta 09 - Kullanıcı Arayüzü]] ✅
-- Hafta 10 - Test ve İyileştirme ← **şu anki hafta**
+- [[01-Notlar/Haftalar/Hafta 10 - Test ve İyileştirme]] ✅ · [[02-Tasarim/Test Raporu]]
+- Hafta 11 - Final Hazırlığı ← **şu anki hafta**
 
 ## Açık Kararlar
 - [x] Arayüz: web (Flask + tarayıcı), hafta 9

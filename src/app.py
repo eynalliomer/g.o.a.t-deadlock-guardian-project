@@ -1,6 +1,7 @@
 """Web arayüzü (MVC'deki Controller): düğmelerden gelen istekleri motora iletir.
 
-Çalıştırma:  python -m src.app   →  http://127.0.0.1:5000
+Çalıştırma:  python -m src.app   →  http://127.0.0.1:5050
+(5000 değil: macOS'te AirPlay alıcısı 5000 portunu kullanıyor.)
 Her düğme bir POST isteği gönderir; eylem uygulanır ve sayfaya geri yönlendirilir
 (POST → yönlendir → GET): sayfa yenilenince aynı eylem iki kez uygulanmaz.
 """
@@ -81,4 +82,4 @@ def create_app(scenario: str = DEFAULT_SCENARIO) -> Flask:
 
 
 if __name__ == "__main__":
-    create_app().run(host="127.0.0.1", port=5000, debug=False)
+    create_app().run(host="127.0.0.1", port=5050, debug=False)
