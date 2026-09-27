@@ -19,3 +19,7 @@ simulation_view.html
 Thumbs.db
 .vscode/*
 !.vscode/settings.json
+
+# pytest-cov kod kapsamı çıktısı
+.coverage
+htmlcov/
