@@ -143,9 +143,19 @@ class Simulation:
             applied = recover(self.process_list, self.resource_list, on_apply=self._record)
             title = f"{n}. Recovery: " + (", ".join(o.label() for o in applied) or "deadlock yok, işlem gerekmedi")
         else:
-            process = self._get_process(action["process"])
-            if process.state == ProcessState.TERMINATED:
-                raise ValueError(f"{process.name} sonlandırıldı, yeni eylem alamaz.")
+            # Durumu değiştirmeden önce eylemi doğrula: hatalı eylem sistemi yarım bırakmasın.
+            name = action.get("process")
+            if not name:
+                raise ValueError(f"'{kind}' eyleminde process adı eksik.")
+            existing = self.processes.get(name)
+            if existing is not None and existing.state == ProcessState.TERMINATED:
+                raise ValueError(f"{name} sonlandırıldı, yeni eylem alamaz.")
+            if kind != "terminate" and action.get("resource") not in self.resources:
+                raise ValueError(f"Bilinmeyen kaynak: {action.get('resource')}")
+            if kind in ("acquire", "release") and existing is not None and existing.state == ProcessState.WAITING:
+                # Bekleyen process bloke durumdadır (CPU'da çalışmıyor), yeni istek ya da bırakma yapamaz.
+                raise ValueError(f"{name} şu an bir kaynağı bekliyor (WAITING); yeni {kind} yapamaz.")
+            process = self._get_process(name)
             resource = self.resources.get(action.get("resource"))
             amount = action.get("amount", 1)
 

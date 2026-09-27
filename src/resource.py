@@ -22,6 +22,14 @@ class Resource:
         return self.total_instances - self.allocated_instances
 
     def acquire(self, process, amount: int = 1) -> bool:
+        if amount < 1:
+            raise ValueError(f"{process.name}, {self.name}'den en az 1 birim istemeli (istenen: {amount}).")
+        if amount > self.total_instances:
+            # Hiçbir zaman karşılanamaz: bekletmek sonsuz beklemeye (starvation) yol açardı.
+            raise ValueError(
+                f"{process.name}, {self.name}'nin toplam adedinden ({self.total_instances}) fazla isteyemez "
+                f"(istenen: {amount})."
+            )
         if amount > self.available_instances:
             process.state = ProcessState.WAITING
             if not any(p is process for p, _ in self.waiting_queue):
@@ -36,6 +44,8 @@ class Resource:
         return True
 
     def release(self, process, amount: int = 1):
+        if amount < 1:
+            raise ValueError(f"{process.name}, {self.name}'den en az 1 birim bırakmalı (istenen: {amount}).")
         held = self.allocation.get(process, 0)
         if amount > held:
             raise ValueError(
