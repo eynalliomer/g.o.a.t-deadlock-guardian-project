@@ -68,13 +68,42 @@ def _safety_banner(safety, decision):
     return html
 
 
-def render_step(title: str, processes, resources, report=None, safety=None, decision=None) -> str:
+RISK_COLORS = {"LOW": "#27ae60", "MEDIUM": "#c9a000", "HIGH": "#e67e22", "CRITICAL": "#c0392b"}
+
+
+def _risk_panel(risk):
+    if risk is None:
+        return ""
+    name = risk.level.name
+    reasons = "".join(f"<li>{reason}</li>" for reason in risk.reasons)
+    return f"""
+    <div class="risk" style="border-color:{RISK_COLORS[name]}">
+        <span class="risk-badge" style="background:{RISK_COLORS[name]}">RİSK: {name}</span>
+        <ul>{reasons}</ul>
+    </div>
+    """
+
+
+def _risk_timeline(risk_timeline):
+    """Sayfanın üstündeki risk seyri: her adım için tıklanabilir renkli bir kutucuk."""
+    if not risk_timeline:
+        return ""
+    chips = "".join(
+        f'<span class="chip" data-step="{i}" style="background:{RISK_COLORS[r.level.name]}" '
+        f'title="Adım {i}: {r.level.name}">{i}</span>'
+        for i, r in enumerate(risk_timeline)
+    )
+    return f'<div class="timeline"><b>Risk seyri:</b> {chips}</div>'
+
+
+def render_step(title: str, processes, resources, report=None, safety=None, decision=None, risk=None) -> str:
     deadlocked = set(report.deadlocked) if report else set()
     process_cards = "".join(_process_card(p, p.name in deadlocked) for p in processes)
     resource_cards = "".join(_resource_card(r) for r in resources)
     return f"""
     <section class="step">
         <h2>{title}</h2>
+        {_risk_panel(risk)}
         {_report_banner(report)}
         {_safety_banner(safety, decision)}
         <div class="step-body">
@@ -85,7 +114,7 @@ def render_step(title: str, processes, resources, report=None, safety=None, deci
     """
 
 
-def save_html(steps_html: list[str], out_path: str = "simulation_view.html"):
+def save_html(steps_html: list[str], risk_timeline=None, out_path: str = "simulation_view.html"):
     style = """
     <style>
         body { font-family: sans-serif; background:#f4f4f4; padding:20px; }
@@ -111,6 +140,13 @@ def save_html(steps_html: list[str], out_path: str = "simulation_view.html"):
         .nav button:disabled { opacity:0.4; cursor:default; }
         #counter { font-weight:bold; min-width:110px; text-align:center; }
         .hint { color:#777; font-size:13px; margin-left:auto; }
+        .risk { border-left:6px solid; background:white; border-radius:6px; padding:8px 12px; margin-bottom:10px; }
+        .risk ul { margin:6px 0 0 0; padding-left:20px; }
+        .risk-badge { color:white; font-weight:bold; padding:3px 10px; border-radius:4px; }
+        .timeline { display:flex; gap:6px; align-items:center; margin-bottom:10px; flex-wrap:wrap; }
+        .chip { color:white; font-weight:bold; font-size:12px; width:26px; height:26px; line-height:26px;
+                text-align:center; border-radius:50%; cursor:pointer; }
+        .chip.active { outline:3px solid #333; outline-offset:1px; }
     </style>
     """
     nav = """
@@ -121,7 +157,7 @@ def save_html(steps_html: list[str], out_path: str = "simulation_view.html"):
         <button id="toggle-all">Tümünü göster</button>
         <span class="hint">Klavye: ← →</span>
     </div>
-    """
+    """ + _risk_timeline(risk_timeline)
     # JS yalnızca adımları gizleyip gösteriyor; JS kapalıysa bütün adımlar alt alta görünür.
     script = """
     <script>
@@ -141,6 +177,9 @@ def save_html(steps_html: list[str], out_path: str = "simulation_view.html"):
             prev.disabled = showAll || current === 0;
             next.disabled = showAll || current === steps.length - 1;
             toggle.textContent = showAll ? "Adım adım göster" : "Tümünü göster";
+            document.querySelectorAll(".chip").forEach((chip) => {
+                chip.classList.toggle("active", !showAll && Number(chip.dataset.step) === current);
+            });
         }
 
         function go(delta) {
@@ -152,6 +191,9 @@ def save_html(steps_html: list[str], out_path: str = "simulation_view.html"):
         prev.addEventListener("click", () => go(-1));
         next.addEventListener("click", () => go(1));
         toggle.addEventListener("click", () => { showAll = !showAll; update(); });
+        document.querySelectorAll(".chip").forEach((chip) => {
+            chip.addEventListener("click", () => { showAll = false; current = Number(chip.dataset.step); update(); });
+        });
         document.addEventListener("keydown", (e) => {
             if (e.key === "ArrowRight") go(1);
             if (e.key === "ArrowLeft") go(-1);

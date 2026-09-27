@@ -9,6 +9,7 @@ from src.html_view import render_step, save_html
 from src.detection import analyze
 from src.bankers import safety_of, evaluate_acquire, safety_text
 from src.scenario_loader import declared_processes
+from src.risk import assess_risk
 
 
 def run_scenario_step_by_step(path: str):
@@ -23,7 +24,11 @@ def run_scenario_step_by_step(path: str):
     processes = declared_processes(data)  # Max bildirenler baştan sistemde
     report = analyze(list(resources.values()))
     safety = safety_of(list(processes.values()), list(resources.values()))
-    steps_html = [render_step("0. Başlangıç", list(processes.values()), list(resources.values()), report, safety)]
+    risk = assess_risk(list(processes.values()), list(resources.values()))
+    risk_timeline = [risk]
+    steps_html = [
+        render_step("0. Başlangıç", list(processes.values()), list(resources.values()), report, safety, None, risk)
+    ]
     unsafe_steps = []  # sistemi güvensiz duruma sokan isteklerin başlıkları
 
     def get_process(name: str) -> Process:
@@ -50,10 +55,12 @@ def run_scenario_step_by_step(path: str):
 
         report = analyze(list(resources.values()))
         safety = safety_of(list(processes.values()), list(resources.values()))
+        risk = assess_risk(list(processes.values()), list(resources.values()))
+        risk_timeline.append(risk)
         if decision is not None and decision.status == "UNSAFE":
             unsafe_steps.append(title)
         steps_html.append(
-            render_step(title, list(processes.values()), list(resources.values()), report, safety, decision)
+            render_step(title, list(processes.values()), list(resources.values()), report, safety, decision, risk)
         )
 
     return {
@@ -65,6 +72,7 @@ def run_scenario_step_by_step(path: str):
         "report": report,
         "safety": safety,
         "unsafe_steps": unsafe_steps,
+        "risk_timeline": risk_timeline,
     }
 
 
@@ -91,7 +99,14 @@ def main():
     for title in result["unsafe_steps"]:
         print(f"⚠ Sistemi güvensiz duruma sokan istek: {title}")
 
-    out_path = save_html(result["steps_html"])
+    print("\n--- Risk Seyri ---")
+    print(" → ".join(risk.level.name for risk in result["risk_timeline"]))
+    final = result["risk_timeline"][-1]
+    print(f"Son durum: {final.level.name}")
+    for reason in final.reasons:
+        print(f"  • {reason}")
+
+    out_path = save_html(result["steps_html"], result["risk_timeline"])
     print(f"\nGörsel önizleme kaydedildi: {out_path}")
 
 
