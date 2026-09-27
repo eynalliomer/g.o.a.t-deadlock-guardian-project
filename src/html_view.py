@@ -12,7 +12,7 @@ def _claim_lines(process):
     return f"<p><b>Max:</b> {fmt(process.max_claim)} · <b>Need:</b> {fmt(need)}</p>"
 
 
-def _process_card(process, deadlocked=False):
+def process_card(process, deadlocked=False):
     color = {ProcessState.READY: "#2ecc71", ProcessState.WAITING: "#e74c3c",
              ProcessState.TERMINATED: "#95a5a6"}[process.state]
     badge = '<span class="badge">DEADLOCK</span>' if deadlocked else ""
@@ -33,7 +33,7 @@ def _process_card(process, deadlocked=False):
     """
 
 
-def _resource_card(resource):
+def resource_card(resource):
     allocation = ", ".join(
         f"{p.name}×{amount}" for p, amount in resource.allocation.items()
     ) or "—"
@@ -124,8 +124,8 @@ def _recovery_panel(options, applied):
 def render_step(title: str, processes, resources, report=None, safety=None, decision=None, risk=None,
                 options=None, applied=None) -> str:
     deadlocked = set(report.deadlocked) if report else set()
-    process_cards = "".join(_process_card(p, p.name in deadlocked) for p in processes)
-    resource_cards = "".join(_resource_card(r) for r in resources)
+    process_cards = "".join(process_card(p, p.name in deadlocked) for p in processes)
+    resource_cards = "".join(resource_card(r) for r in resources)
     return f"""
     <section class="step">
         <h2>{title}</h2>

@@ -1,3 +1,4 @@
 # Proje bağımlılıkları (haftalar ilerledikçe eklenecek)
 pytest
 reportlab  # yalnızca 04-Kaynaklar'daki PDF betikleri için
+flask>=3.1  # hafta 9: web arayüzü (python -m src.app)
