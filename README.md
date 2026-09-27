@@ -26,8 +26,8 @@ Deadlock, birden fazla process'in birbirinin tuttuğu kaynağı beklemesi yüzü
 | 6 | Risk analizi (Banker's Algorithm) | ✅ Tamamlandı |
 | 7 | Risk seviyesi sistemi | ✅ Tamamlandı |
 | 8 | Recovery | ✅ Tamamlandı |
-| 9 | Kullanıcı arayüzü | ⏳ Sırada |
-| 10 | Test ve iyileştirme | |
+| 9 | Kullanıcı arayüzü | ✅ Tamamlandı |
+| 10 | Test ve iyileştirme | ⏳ Sırada |
 | 11 | Final: demo, rapor, sunum | |
 
 Her haftanın sonu Git'te `hafta-01`, `hafta-02`… etiketleriyle işaretlenir.
@@ -63,7 +63,15 @@ source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-Bir senaryoyu çalıştırmak (olay kaydı, durum tablosu ve `simulation_view.html` önizlemesi üretir):
+**Web arayüzü (dashboard):**
+
+```bash
+python -m src.app      # ardından tarayıcıda http://127.0.0.1:5000
+```
+
+Senaryo seçip adım adım ilerletebilir, geri alabilir, deadlock anında kurtarma seçeneklerinden birini düğmeyle uygulayabilir ve senaryo dışı elle eylem yapabilirsiniz.
+
+Bir senaryoyu konsolda çalıştırmak (olay kaydı, durum tablosu ve `simulation_view.html` statik önizlemesi üretir):
 
 ```bash
 python -m src.run_scenario scenarios/hafta3_cok_ornekli.json

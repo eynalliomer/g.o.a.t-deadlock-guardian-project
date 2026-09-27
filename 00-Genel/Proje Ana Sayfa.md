@@ -1,7 +1,7 @@
 ---
 tags: [proje, isletim-sistemleri, deadlock-guardian]
 olusturma: 2026-09-23
-durum: hafta-9
+durum: hafta-10
 ---
 # Deadlock Guardian
 
@@ -31,11 +31,12 @@ https://github.com/eynalliomer/g.o.a.t-deadlock-guardian-project · her hafta `h
 - [[01-Notlar/Haftalar/Hafta 06 - Risk Analizi]] ✅
 - [[01-Notlar/Haftalar/Hafta 07 - Risk Seviyesi Sistemi]] ✅
 - [[01-Notlar/Haftalar/Hafta 08 - Recovery]] ✅
-- Hafta 09 - Kullanıcı Arayüzü ← **şu anki hafta**
+- [[01-Notlar/Haftalar/Hafta 09 - Kullanıcı Arayüzü]] ✅
+- Hafta 10 - Test ve İyileştirme ← **şu anki hafta**
 
 ## Açık Kararlar
-- [ ] Arayüz: PyQt mı, basit web arayüzü mü?
-- [ ] Veri: JSON mu, SQLite mı?
+- [x] Arayüz: web (Flask + tarayıcı), hafta 9
+- [x] Veri: JSON senaryo dosyaları (`scenarios/`), hafta 3
 - [x] Ekip 4 kişi (roller: [[00-Genel/Ekip ve Teknoloji]])
 - [ ] Rollerin hangi üyeye verileceği
 - [x] GitHub deposu kuruldu (tek geliştirici, `main` dalı)
@@ -46,3 +47,4 @@ https://github.com/eynalliomer/g.o.a.t-deadlock-guardian-project · her hafta `h
 - [[03-Gunluk/2026-09-24]]
 - [[03-Gunluk/2026-09-25]]
 - [[03-Gunluk/2026-09-27]]
+- [[03-Gunluk/2026-09-28]]
