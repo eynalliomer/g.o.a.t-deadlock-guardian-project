@@ -25,8 +25,8 @@ Deadlock, birden fazla process'in birbirinin tuttuğu kaynağı beklemesi yüzü
 | 5 | Görselleştirme | ✅ Tamamlandı |
 | 6 | Risk analizi (Banker's Algorithm) | ✅ Tamamlandı |
 | 7 | Risk seviyesi sistemi | ✅ Tamamlandı |
-| 8 | Recovery | ⏳ Sırada |
-| 9 | Kullanıcı arayüzü | |
+| 8 | Recovery | ✅ Tamamlandı |
+| 9 | Kullanıcı arayüzü | ⏳ Sırada |
 | 10 | Test ve iyileştirme | |
 | 11 | Final: demo, rapor, sunum | |
 
@@ -84,6 +84,12 @@ python -m src.run_scenario scenarios/hafta6_guvensiz_ama_deadlock_yok.json # gü
 ```
 
 Her adımda risk seviyesi (LOW / MEDIUM / HIGH / CRITICAL) ve nedenleri hesaplanır; konsolda "Risk Seyri", sayfanın üstünde tıklanabilir risk seyri çubuğu olarak görünür.
+
+Deadlock'tan kurtarmayı görmek için (normal → risk artışı → deadlock → recovery → güvenli durum):
+
+```bash
+python -m src.run_scenario scenarios/hafta8_recovery.json
+```
 
 Testler:
 
