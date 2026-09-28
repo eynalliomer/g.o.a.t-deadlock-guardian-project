@@ -1,7 +1,7 @@
 ---
 tags: [proje, isletim-sistemleri, deadlock-guardian]
 olusturma: 2026-09-23
-durum: hafta-11
+durum: tamamlandı
 ---
 # Deadlock Guardian
 
@@ -15,6 +15,9 @@ https://github.com/eynalliomer/g.o.a.t-deadlock-guardian-project · her hafta `h
 
 ## Proje Belgeleri
 - 📘 **El kitabı (11 haftanın bilgi havuzu):** ![[04-Kaynaklar/Deadlock_Guardian_El_Kitabi.pdf]]
+- 📕 **Final proje raporu:** ![[04-Kaynaklar/Deadlock_Guardian_Final_Rapor.pdf]]
+- 🎞 Sunum: https://claude.ai/artifact/4SJH2ECynnxoMgHvsXrAG4
+- 🧪 [[02-Tasarim/Test Raporu]]
 - 📄 Hocaya teslim edilen plan: [[04-Kaynaklar/Deadlock_Guardian_11_Haftalik_Plan.pdf]]
 - [[00-Genel/Proje Tanımı]]: amaç, 3 ana aşama, örnek, kullanılan OS konuları
 - [[00-Genel/11 Haftalık Plan]]: haftalık yol haritası
@@ -33,7 +36,7 @@ https://github.com/eynalliomer/g.o.a.t-deadlock-guardian-project · her hafta `h
 - [[01-Notlar/Haftalar/Hafta 08 - Recovery]] ✅
 - [[01-Notlar/Haftalar/Hafta 09 - Kullanıcı Arayüzü]] ✅
 - [[01-Notlar/Haftalar/Hafta 10 - Test ve İyileştirme]] ✅ · [[02-Tasarim/Test Raporu]]
-- Hafta 11 - Final Hazırlığı ← **şu anki hafta**
+- [[01-Notlar/Haftalar/Hafta 11 - Final Hazırlığı]] ✅
 
 ## Açık Kararlar
 - [x] Arayüz: web (Flask + tarayıcı), hafta 9

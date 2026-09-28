@@ -28,7 +28,7 @@ Deadlock, birden fazla process'in birbirinin tuttuğu kaynağı beklemesi yüzü
 | 8 | Recovery | ✅ Tamamlandı |
 | 9 | Kullanıcı arayüzü | ✅ Tamamlandı |
 | 10 | Test ve iyileştirme | ✅ Tamamlandı |
-| 11 | Final: demo, rapor, sunum | ⏳ Sırada |
+| 11 | Final: demo, rapor, sunum | ✅ Tamamlandı |
 
 Her haftanın sonu Git'te `hafta-01`, `hafta-02`… etiketleriyle işaretlenir.
 
@@ -52,6 +52,8 @@ Notlar [Obsidian](https://obsidian.md) ile yazılır; klasör aynı zamanda bir 
 - [Proje tanımı](00-Genel/Proje%20Tanımı.md)
 - [11 haftalık plan](00-Genel/11%20Haftalık%20Plan.md) · [PDF](04-Kaynaklar/Deadlock_Guardian_11_Haftalik_Plan.pdf)
 - [El kitabı: 11 haftanın bilgi havuzu](04-Kaynaklar/Deadlock_Guardian_El_Kitabi.pdf)
+- [**Final proje raporu (PDF)**](04-Kaynaklar/Deadlock_Guardian_Final_Rapor.pdf)
+- [Test raporu](02-Tasarim/Test%20Raporu.md)
 
 ## Çalıştırma
 
@@ -69,7 +71,7 @@ pip install -r requirements.txt
 python -m src.app      # ardından tarayıcıda http://127.0.0.1:5050
 ```
 
-Senaryo seçip adım adım ilerletebilir, geri alabilir, deadlock anında kurtarma seçeneklerinden birini düğmeyle uygulayabilir ve senaryo dışı elle eylem yapabilirsiniz.
+Final demo için senaryo listesinden `final_demo.json`'u seçin (normal → risk artışı → deadlock → kurtarma → güvenli durum). Senaryo seçip adım adım ilerletebilir, geri alabilir, deadlock anında kurtarma seçeneklerinden birini düğmeyle uygulayabilir ve senaryo dışı elle eylem yapabilirsiniz.
 
 Bir senaryoyu konsolda çalıştırmak (olay kaydı, durum tablosu ve `simulation_view.html` statik önizlemesi üretir):
 
@@ -102,7 +104,7 @@ python -m src.run_scenario scenarios/hafta8_recovery.json
 Testler:
 
 ```bash
-python -m pytest tests/ -v          # 127 test
+python -m pytest tests/ -v          # 140 test
 python -m pytest tests/ --cov=src   # kod kapsamıyla (%99)
 ```
 

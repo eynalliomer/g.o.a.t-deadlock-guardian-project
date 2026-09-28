@@ -18,7 +18,7 @@ tags: [deadlock-guardian, plan]
 | 8 | [[01-Notlar/Haftalar/Hafta 08 - Recovery\|Recovery]] | Process sonlandırma, kaynak geri alma, en düşük maliyetli kurbanın seçilmesi, SAFE'e dönüş | Çalışan kurtarma modülü | ✅ |
 | 9 | [[01-Notlar/Haftalar/Hafta 09 - Kullanıcı Arayüzü\|Kullanıcı Arayüzü]] | Tüm modüllerin tek dashboard'da birleştirilmesi | Bütünleşik arayüz | ✅ |
 | 10 | [[01-Notlar/Haftalar/Hafta 10 - Test ve İyileştirme\|Test ve İyileştirme]] | Normal, tek/çoklu deadlock ve recovery senaryolarının testi, hata düzeltme | Test raporu, kararlı sürüm | ✅ |
-| 11 | Final Hazırlığı | Son kontroller, demo senaryosu, rapor, sunum | Final demo, rapor ve sunum | |
+| 11 | [[01-Notlar/Haftalar/Hafta 11 - Final Hazırlığı\|Final Hazırlığı]] | Son kontroller, demo senaryosu, rapor, sunum | Final demo, rapor ve sunum | ✅ |
 
 **11. haftanın sonunda:** process/resource simüle eden, ilişkileri takip eden, riski gösteren, deadlock'u tespit eden ve recovery sunan çalışan bir prototip.
 

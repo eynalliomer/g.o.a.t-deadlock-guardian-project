@@ -17,14 +17,16 @@ tags: [deadlock-guardian, demo]
 
 Kısa akış: `Normal sistem → kaynak talepleri → risk artışı → deadlock → tespit → recovery → güvenli durum`
 
+Uygulaması: `scenarios/final_demo.json` → [[01-Notlar/Haftalar/Hafta 11 - Final Hazırlığı]]
+
 ## Başarı kriterleri
-- [ ] En az bir deadlock senaryosunu doğru tespit etmek
-- [ ] Deadlock'a dahil process ve kaynakları göstermek
-- [ ] Belirlenen koşullarda deadlock risk uyarısı vermek
-- [ ] En az bir recovery yöntemi uygulamak
-- [ ] Recovery sonrası sistemin güvenli duruma döndüğünü göstermek
-- [ ] Normal ve deadlock durumlarını karşılaştırmak
-- [ ] Kodun modüler olması (üyeler ayrı çalışabilmeli)
-- [ ] Finalde baştan sona çalışan bir demo
+- [x] En az bir deadlock senaryosunu doğru tespit etmek (tek, çoklu ve çok örnekli kaynaklı senaryolar)
+- [x] Deadlock'a dahil process ve kaynakları göstermek (durum paneli, kart vurgusu, graf üzerinde döngü)
+- [x] Belirlenen koşullarda deadlock risk uyarısı vermek (4 risk seviyesi + Banker's uyarısı)
+- [x] En az bir recovery yöntemi uygulamak (sonlandırma ve kaynak geri alma)
+- [x] Recovery sonrası sistemin güvenli duruma döndüğünü göstermek (Banker's güvenli sıra buluyor)
+- [x] Normal ve deadlock durumlarını karşılaştırmak (`hafta10_normal_calisma.json` ve risk seyri)
+- [x] Kodun modüler olması (katmanlı mimari; algoritmalar arayüzden bağımsız test edildi)
+- [x] Finalde baştan sona çalışan bir demo (`scenarios/final_demo.json`, `python -m src.app`)
 
 ← [[00-Genel/Proje Ana Sayfa]]
